@@ -1,38 +1,157 @@
-.App {
-  text-align: center;
+/* 全域重設與變數 */
+:root{
+	--bg-start: #eff6ff;
+	--bg-end: #eef2ff;
+	--card: #ffffff;
+	--muted: #6b7280;
+	--heading: #0f172a;
+	--accent: #3b82f6;
+	--success: #10B981;
+	--danger: #EF4444;
+	--warning: #F59E0B;
+	--card-radius: 12px;
+	--shadow-lg: 0 10px 30px rgba(2,6,23,0.08);
+	--container-max: 1100px;
+	font-family: "Noto Sans TC", "Segoe UI", Roboto, -apple-system, "Helvetica Neue", Arial, sans-serif;
+	box-sizing: border-box;
 }
 
-.App-logo {
-  height: 40vmin;
-  pointer-events: none;
+/* 基本樣式 */
+*,
+*::before,
+*::after { box-sizing: inherit; }
+
+body {
+	margin: 0;
+	background: linear-gradient(135deg, var(--bg-start) 0%, var(--bg-end) 100%);
+	color: var(--heading);
+	-webkit-font-smoothing: antialiased;
+	-moz-osx-font-smoothing: grayscale;
+	font-family: inherit;
+	line-height: 1.5;
 }
 
-@media (prefers-reduced-motion: no-preference) {
-  .App-logo {
-    animation: App-logo-spin infinite 20s linear;
-  }
+/* 方便對應 component 裡使用的 class（不需安裝 Tailwind 就能有類似外觀） */
+.min-h-screen {
+	min-height: 100vh;
+	padding: 32px;
 }
 
-.App-header {
-  background-color: #282c34;
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  font-size: calc(10px + 2vmin);
-  color: white;
+/* 中央容器 */
+.max-w-6xl {
+	max-width: var(--container-max);
+	margin-left: auto;
+	margin-right: auto;
+	padding-left: 16px;
+	padding-right: 16px;
 }
 
-.App-link {
-  color: #61dafb;
+/* 卡片 / 白色區塊 */
+.bg-white { background-color: var(--card); }
+.rounded-xl { border-radius: var(--card-radius); }
+.rounded-lg { border-radius: 10px; }
+.shadow-lg { box-shadow: var(--shadow-lg); }
+.border-l-4 { border-left-width: 4px; border-left-style: solid; }
+.border-green-500 { border-left-color: var(--success); }
+.border-red-500 { border-left-color: var(--danger); }
+.border-orange-500 { border-left-color: var(--warning); }
+
+/* 文字 & 標題 */
+.text-center { text-align: center; }
+.text-4xl { font-size: 2.25rem; line-height: 1.1; font-weight: 700; margin: 0; }
+.text-2xl { font-size: 1.5rem; font-weight: 700; margin: 0 0 0.5rem 0; }
+.text-lg { font-size: 1.125rem; }
+.text-sm { font-size: 0.875rem; color: var(--muted); }
+
+/* 卡片內間距與排版 */
+.p-6 { padding: 1.5rem; }
+.p-4 { padding: 1rem; }
+.mb-8 { margin-bottom: 2rem; }
+.mb-6 { margin-bottom: 1.5rem; }
+.mt-6 { margin-top: 1.5rem; }
+
+/* 標籤頁（tab）區塊：選單容器 */
+.flex { display: flex; }
+.flex-wrap { flex-wrap: wrap; }
+.justify-center { justify-content: center; }
+.m-1 { margin: 0.25rem; }
+.p-2 { padding: 0.5rem; }
+
+.flex.flex-wrap.justify-center {
+	background: var(--card);
+	border-radius: 10px;
+	padding: 8px;
+	box-shadow: var(--shadow-lg);
+	align-items: center;
 }
 
-@keyframes App-logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
+/* 按鈕（分頁） */
+.flex.flex-wrap.justify-center button {
+	border: none;
+	background: transparent;
+	padding: 0.5rem 1rem;
+	margin: 4px;
+	border-radius: 8px;
+	cursor: pointer;
+	font-weight: 600;
+	color: #374151;
+	transition: all 180ms ease;
 }
+.flex.flex-wrap.justify-center button:hover {
+	background: rgba(15,23,42,0.04);
+}
+.bg-blue-500 { background: var(--accent); color: #fff; box-shadow: 0 6px 14px rgba(59,130,246,0.12); }
+.text-white { color: #fff; }
+.shadow-md { box-shadow: 0 6px 14px rgba(2,6,23,0.06); }
+
+/* 卡片內的統計卡片群組 */
+.grid { display: grid; gap: 1rem; }
+.grid.grid-cols-1 { grid-template-columns: 1fr; }
+@media (min-width: 768px) {
+	.grid.md\:grid-cols-3 { grid-template-columns: repeat(3, 1fr); }
+	.grid.lg\:grid-cols-2 { grid-template-columns: repeat(2, 1fr); }
+}
+
+/* 小資訊卡 */
+.bg-green-50 { background: rgba(16,185,129,0.06); }
+.bg-red-50 { background: rgba(239,68,68,0.06); }
+.bg-blue-50 { background: rgba(59,130,246,0.06); }
+.text-green-600 { color: var(--success); }
+.text-red-600 { color: var(--danger); }
+.text-orange-600 { color: var(--warning); }
+
+/* 圖表容器 */
+.chart-area, .chart-wrapper, .ResponsiveContainer, .recharts-wrapper {
+	width: 100%;
+	height: 100%;
+	min-height: 200px;
+}
+
+/* 支援列表 / 小項目 */
+.space-y-4 > * + * { margin-top: 1rem; }
+.bg-gray-50 { background: #f9fafb; }
+
+/* 表格（簡易樣式） */
+table { width: 100%; border-collapse: collapse; margin-top: 1rem; }
+th, td { padding: 0.75rem; text-align: left; border-bottom: 1px solid #e6eef6; }
+th { background: #f1f5f9; font-weight: 700; color: var(--heading); }
+
+/* 底部 dark 區塊 */
+.bg-gray-800 { background: #0b1220; color: #e6eef6; }
+.bg-gray-800 a { color: #93c5fd; }
+
+/* 響應式微調 */
+@media (max-width: 640px){
+	.min-h-screen { padding: 16px; }
+	.text-4xl { font-size: 1.6rem; }
+	.p-6 { padding: 1rem; }
+	.grid.md\:grid-cols-3 { grid-template-columns: 1fr; }
+}
+
+/* 小按鈕/徽章 */
+.rounded-full { border-radius: 9999px; }
+
+/* 輔助：避免特定沒有 Tailwind 時的瀏覽器樣式差異 */
+button { font-family: inherit; }
+
+/* 可擴充：若想套用更多 Tailwind-like utilities，可在此延伸新增 class 覆寫 */
