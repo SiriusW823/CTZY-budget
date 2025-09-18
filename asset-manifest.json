@@ -1,16 +1,15 @@
 {
   "files": {
-    "main.css": "/CTZY-budget/static/css/main.f855e6bc.css",
-    "main.js": "/CTZY-budget/static/js/main.7c7a6eb7.js",
-    "static/js/453.2550bc9c.chunk.js": "/CTZY-budget/static/js/453.2550bc9c.chunk.js",
-    "static/media/logo.svg": "/CTZY-budget/static/media/logo.6ce24c58023cc2f8fd88fe9d219db6c6.svg",
+    "main.css": "/CTZY-budget/static/css/main.e6c13ad2.css",
+    "main.js": "/CTZY-budget/static/js/main.34a0208a.js",
+    "static/js/453.9c80d0aa.chunk.js": "/CTZY-budget/static/js/453.9c80d0aa.chunk.js",
     "index.html": "/CTZY-budget/index.html",
-    "main.f855e6bc.css.map": "/CTZY-budget/static/css/main.f855e6bc.css.map",
-    "main.7c7a6eb7.js.map": "/CTZY-budget/static/js/main.7c7a6eb7.js.map",
-    "453.2550bc9c.chunk.js.map": "/CTZY-budget/static/js/453.2550bc9c.chunk.js.map"
+    "main.e6c13ad2.css.map": "/CTZY-budget/static/css/main.e6c13ad2.css.map",
+    "main.34a0208a.js.map": "/CTZY-budget/static/js/main.34a0208a.js.map",
+    "453.9c80d0aa.chunk.js.map": "/CTZY-budget/static/js/453.9c80d0aa.chunk.js.map"
   },
   "entrypoints": [
-    "static/css/main.f855e6bc.css",
-    "static/js/main.7c7a6eb7.js"
+    "static/css/main.e6c13ad2.css",
+    "static/js/main.34a0208a.js"
   ]
 }
