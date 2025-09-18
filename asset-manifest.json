@@ -1,15 +1,15 @@
 {
   "files": {
-    "main.css": "/CTZY-budget/static/css/main.99bcdd6f.css",
-    "main.js": "/CTZY-budget/static/js/main.112f9f6c.js",
+    "main.css": "/CTZY-budget/static/css/main.e6c13ad2.css",
+    "main.js": "/CTZY-budget/static/js/main.34a0208a.js",
     "static/js/453.9c80d0aa.chunk.js": "/CTZY-budget/static/js/453.9c80d0aa.chunk.js",
     "index.html": "/CTZY-budget/index.html",
-    "main.99bcdd6f.css.map": "/CTZY-budget/static/css/main.99bcdd6f.css.map",
-    "main.112f9f6c.js.map": "/CTZY-budget/static/js/main.112f9f6c.js.map",
+    "main.e6c13ad2.css.map": "/CTZY-budget/static/css/main.e6c13ad2.css.map",
+    "main.34a0208a.js.map": "/CTZY-budget/static/js/main.34a0208a.js.map",
     "453.9c80d0aa.chunk.js.map": "/CTZY-budget/static/js/453.9c80d0aa.chunk.js.map"
   },
   "entrypoints": [
-    "static/css/main.99bcdd6f.css",
-    "static/js/main.112f9f6c.js"
+    "static/css/main.e6c13ad2.css",
+    "static/js/main.34a0208a.js"
   ]
 }
