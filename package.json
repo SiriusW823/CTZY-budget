@@ -1,8 +1,8 @@
 {
   "name": "s25-website",
-  "homepage": "https://<GITHUB_USERNAME>.github.io/CTZY-budget",
-  "version": "1.0.0",
-  "private": false,
+  "homepage": "https://SiriusW823.github.io/CTZY-budget",
+  "version": "0.1.0",
+  "private": true,
   "dependencies": {
     "@testing-library/dom": "^10.4.1",
     "@testing-library/jest-dom": "^6.8.0",
@@ -44,8 +44,5 @@
       "last 1 firefox version",
       "last 1 safari version"
     ]
-  },
-  "devDependencies": {
-    "gh-pages": "^5.0.0"
   }
 }

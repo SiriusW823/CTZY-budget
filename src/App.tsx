@@ -283,7 +283,7 @@ const BudgetVisualization = () => {
           </p>
           <div className="border-t border-gray-700 pt-4 mt-4">
             <p className="text-sm text-gray-400">
-              團隊聯絡方式：[belove@mail.tzu.edu.tw] | 如有任何疑問歡迎詢問
+              團隊聯絡方式：belove@mail.tzu.edu.tw | 如有任何疑問歡迎詢問
             </p>
             <p className="text-xs text-gray-500 mt-2">
               此報告由團隊副隊長製作，所有數據真實有效，歡迎查證
