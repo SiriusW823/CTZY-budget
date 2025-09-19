@@ -229,11 +229,11 @@ const BudgetVisualization = () => {
                       outerRadius={120}
                       fill="#8884d8"
                       dataKey="value"
-                      // 顯示 label：帶入原始 raw 值的正負標示
-                      label={({ payload }) => {
-                        const raw = payload.raw ?? 0;
+                      // 顯示 label：payload 使用 any 並以安全存取 raw
+                      label={({ payload }: any) => {
+                        const raw = (payload?.raw ?? 0) as number;
                         const sign = raw < 0 ? '-' : '';
-                        return `${payload.name}: ${sign}NT$${Math.abs(raw).toLocaleString()}`;
+                        return `${payload?.name ?? 'N/A'}: ${sign}NT$${Math.abs(raw).toLocaleString()}`;
                       }}
                     >
                       {overviewPieData.map((entry, index) => (
@@ -241,9 +241,9 @@ const BudgetVisualization = () => {
                       ))}
                     </Pie>
                     <Tooltip
-                      // tooltip 顯示原始含正負金額
-                      formatter={(value, name, props) => {
-                        const raw = props && props.payload && props.payload.raw;
+                      // tooltip callback 參數標註為 any，並以安全存取 payload.raw
+                      formatter={(value: any, name: any, props: any) => {
+                        const raw = props?.payload?.raw;
                         if (typeof raw === 'number') {
                           return `${raw < 0 ? '-NT$ ' : 'NT$ '}${Math.abs(raw).toLocaleString()}`;
                         }
