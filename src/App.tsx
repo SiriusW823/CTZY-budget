@@ -124,6 +124,9 @@ const BudgetVisualization = () => {
     raw: Number(d.value || 0) // 原始值（保留正負用於 tooltip/label）
   }));
 
+  // 只保留「總募款」與「總支出」，移除「目前餘額」切片
+  const overviewPieDataNoBalance = overviewPieData.filter(d => d.name !== '目前餘額');
+
   // 主要支出分類（提供給「支出明細」圓餅圖與清單）
   const expenseCategories = [
     { name: '住宿費用', value: 113700, percentage: 42.1, color: '#3B82F6' },
@@ -222,23 +225,33 @@ const BudgetVisualization = () => {
               <div className="flex justify-center">
                 <ResponsiveContainer width="100%" height={400}>
                   <PieChart>
-                    <Pie
-                      data={overviewPieData}
-                      cx="50%"
-                      cy="50%"
-                      outerRadius={120}
-                      fill="#8884d8"
-                      dataKey="value"
-                      // 顯示 label：payload 使用 any 並以安全存取 raw
-                      label={({ payload }: any) => {
-                        const raw = (payload?.raw ?? 0) as number;
-                        const sign = raw < 0 ? '-' : '';
-                        return `${payload?.name ?? 'N/A'}: ${sign}NT$${Math.abs(raw).toLocaleString()}`;
-                      }}
-                    >
-                      {overviewPieData.map((entry, index) => (
-                        <Cell key={`cell-${index}`} fill={entry.color} />
-                      ))}
+-                    <Pie
+-                      data={overviewPieData}
++                    <Pie
++                      data={overviewPieDataNoBalance}
+                       cx="50%"
+                       cy="50%"
+                       outerRadius={120}
+                       fill="#8884d8"
+                       dataKey="value"
+                       // 顯示 label：payload 使用 any 並以安全存取 raw
+-                      label={({ payload }: any) => {
+-                        const raw = (payload?.raw ?? 0) as number;
+-                        const sign = raw < 0 ? '-' : '';
+-                        return `${payload?.name ?? 'N/A'}: ${sign}NT$${Math.abs(raw).toLocaleString()}`;
+-                      }}
++                      label={({ payload }: any) => {
++                        const raw = (payload?.raw ?? 0) as number;
++                        const sign = raw < 0 ? '-' : '';
++                        return `${payload?.name ?? 'N/A'}: ${sign}NT$${Math.abs(raw).toLocaleString()}`;
++                      }}
+                     >
+-                      {overviewPieData.map((entry, index) => (
+-                        <Cell key={`cell-${index}`} fill={entry.color} />
+-                      ))}
++                      {overviewPieDataNoBalance.map((entry, index) => (
++                        <Cell key={`cell-${index}`} fill={entry.color} />
++                      ))}
                     </Pie>
                     <Tooltip
                       // tooltip callback 參數標註為 any，並以安全存取 payload.raw
