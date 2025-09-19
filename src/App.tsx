@@ -197,7 +197,7 @@ const BudgetVisualization = () => {
   // -------------------------------------------------------------------
 
   // 將原始紀錄正規化：amount -> number（含正負）、並重算累計 balance
-  const normalizeTransactions = (raw) => {
+  const normalizeTransactions = (raw: Array<Record<string, any>>): Array<Record<string, any>> => {
     let running = 0;
     return (raw || []).map(r => {
       const type = (r.type || '').toString().trim();
@@ -229,7 +229,8 @@ const BudgetVisualization = () => {
     }
   };
 
-  const [transactions, setTransactions] = useState(() => normalizeTransactions(initialRaw));
+  // 將 state 的型別明確化
+  const [transactions, setTransactions] = useState<Array<Record<string, any>>>(() => normalizeTransactions(initialRaw));
 
   // 自動在頁面載入時載入 sampleCsv（讓訪客一打開頁面就看到正確的帳目）
   useEffect(() => {
@@ -239,7 +240,7 @@ const BudgetVisualization = () => {
   }, []);
 
   // 幫助函式：把金額字串（含 NT$, 千分號）轉成數值
-  const parseMoney = (s) => {
+  const parseMoney = (s: any): number => {
     if (!s && s !== 0) return 0;
     const normalized = String(s).replace(/[^0-9\-\.\u2212]/g, '').replace('\u2212','-').replace(/,/g, '');
     const n = Number(normalized);
@@ -247,7 +248,7 @@ const BudgetVisualization = () => {
   };
 
   // 簡易 CSV 解析器（支援引號內逗號）
-  const csvToRows = (text) => {
+  const csvToRows = (text: string): string[][] => {
     const rows = [];
     let cur = [], field = '', inQuotes = false;
     for (let i = 0; i < text.length; i++) {
@@ -274,7 +275,7 @@ const BudgetVisualization = () => {
   };
 
   // 把 CSV 內容轉成 transactions 陣列
-  const parseCSVText = (text) => {
+  const parseCSVText = (text: string): Array<Record<string, any>> => {
     const rows = csvToRows(text);
     // 嘗試找出起始資料列（跳過標頭）
     const dataRows = rows.filter(r => r.length >= 4 && (r[0].trim() === '支出' || r[0].trim() === '收入'));
@@ -297,8 +298,8 @@ const BudgetVisualization = () => {
     const f = e.target.files && e.target.files[0];
     if (!f) return;
     const reader = new FileReader();
-    reader.onload = (ev) => {
-      const text = ev.target.result;
+    reader.onload = (ev: ProgressEvent<FileReader>) => {
+      const text = (ev.target && ev.target.result) ? String(ev.target.result) : '';
       const parsed = parseCSVText(text);
       if (parsed.length) setTransactions(normalizeTransactions(parsed));
     };
