@@ -103,7 +103,8 @@ const BudgetVisualization = () => {
   // 自動計算統計數字
   const totalIncome = transactions.filter(t => t.amount > 0).reduce((s, t) => s + t.amount, 0);
   const totalExpense = transactions.filter(t => t.amount < 0).reduce((s, t) => s + Math.abs(t.amount), 0);
-  const currentBalance = transactions.reduce((s, t) => s + t.amount, 0);
+  // 使用者指定的目前餘額（覆寫 transactions 的自動計算）
+  const currentBalance = -1317;
 
   // 使用率與格式化工具
   const usageRate = totalIncome > 0 ? (totalExpense / totalIncome) * 100 : 0;
