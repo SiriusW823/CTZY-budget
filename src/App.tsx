@@ -116,6 +116,14 @@ const BudgetVisualization = () => {
     { name: '目前餘額', value: currentBalance, color: currentBalance >= 0 ? '#10B981' : '#F59E0B' }
   ];
 
+  // 為圓餅圖準備資料（Pie 要正值），但保留 raw 值以顯示正負
+  const overviewPieData = overviewData.map(d => ({
+    name: d.name,
+    value: Math.abs(Number(d.value || 0)), // Pie 顯示用（正值）
+    color: d.color,
+    raw: Number(d.value || 0) // 原始值（保留正負用於 tooltip/label）
+  }));
+
   // 主要支出分類（提供給「支出明細」圓餅圖與清單）
   const expenseCategories = [
     { name: '住宿費用', value: 113700, percentage: 42.1, color: '#3B82F6' },
@@ -215,27 +223,34 @@ const BudgetVisualization = () => {
                 <ResponsiveContainer width="100%" height={400}>
                   <PieChart>
                     <Pie
-                      data={[
-                        { name: '募款收入', value: totalIncome, color: '#10B981' },
-                        { name: '實際支出', value: totalExpense, color: '#EF4444' }
-                      ]}
+                      data={overviewPieData}
                       cx="50%"
                       cy="50%"
                       outerRadius={120}
                       fill="#8884d8"
                       dataKey="value"
-                      label={({ name, value }) =>
-  typeof value === 'number' ? `${name}: NT$${value.toLocaleString()}` : `${name}: NT$未知`
-}
+                      // 顯示 label：帶入原始 raw 值的正負標示
+                      label={({ payload }) => {
+                        const raw = payload.raw ?? 0;
+                        const sign = raw < 0 ? '-' : '';
+                        return `${payload.name}: ${sign}NT$${Math.abs(raw).toLocaleString()}`;
+                      }}
                     >
-                      {[
-                        { name: '募款收入', value: totalIncome, color: '#10B981' },
-                        { name: '實際支出', value: totalExpense, color: '#EF4444' }
-                      ].map((entry, index) => (
+                      {overviewPieData.map((entry, index) => (
                         <Cell key={`cell-${index}`} fill={entry.color} />
                       ))}
                     </Pie>
-                    <Tooltip formatter={(value) => `NT$${value.toLocaleString()}`} />
+                    <Tooltip
+                      // tooltip 顯示原始含正負金額
+                      formatter={(value, name, props) => {
+                        const raw = props && props.payload && props.payload.raw;
+                        if (typeof raw === 'number') {
+                          return `${raw < 0 ? '-NT$ ' : 'NT$ '}${Math.abs(raw).toLocaleString()}`;
+                        }
+                        return `NT$ ${Number(value).toLocaleString()}`;
+                      }}
+                    />
+                    <Legend />
                   </PieChart>
                 </ResponsiveContainer>
               </div>
