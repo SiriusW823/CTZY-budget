@@ -3,12 +3,14 @@ import { PieChart, Pie, Cell, BarChart, Bar, XAxis, YAxis, CartesianGrid, Toolti
 import './App.css';
 const BudgetVisualization = () => {
   const [activeTab, setActiveTab] = useState('overview');
+  const [showLedger, setShowLedger] = useState(false);
 
   // 收支總覽數據
   const overviewData = [
-    { name: '總募款', value: 269000, color: '#10B981' },
+    // 已包含 2025/08/11 恩慈家長捐贈 NT$10,000
+    { name: '總募款', value: 279000, color: '#10B981' },
     { name: '總支出', value: 270317, color: '#EF4444' },
-    { name: '目前餘額', value: -1317, color: '#F59E0B' }
+    { name: '目前餘額', value: 10683, color: '#10B981' }
   ];
 
   // 主要支出分類
@@ -32,6 +34,8 @@ const BudgetVisualization = () => {
     { name: '決賽補助', value: 20000, percentage: 7.4, color: '#06B6D4' },
     { name: '其他捐贈', value: 18000, percentage: 6.7, color: '#EC4899' }
   ];
+  // 新增：恩慈家長捐贈（已入帳）
+  incomeData.push({ name: '恩慈家長捐贈', value: 10000, percentage: 3.6, color: '#F97316' });
 
   // 月度收支趨勢
   const monthlyTrend = [
@@ -44,6 +48,101 @@ const BudgetVisualization = () => {
     { month: '2025/06', 收入: 30000, 支出: 17810, 累計餘額: 89212 },
     { month: '2025/07', 收入: 21000, 支出: 98523, 累計餘額: 11689 },
     { month: '2025/08', 收入: 10000, 支出: 0, 累計餘額: 21689 }
+  ];
+
+  // 詳細逐筆帳目（來源：你提供的帳目）
+  const transactions = [
+    { type: '支出', date: '2024/12/31', item: '報名費', amount: -6000, balance: -6000, party: '', note: '' },
+    { type: '收入', date: '2025/1/11', item: '捐贈', amount: 20000, balance: 14000, party: '法鼓山林師姑', note: 'NT$ 20,000' },
+    { type: '收入', date: '2025/1/11', item: '捐贈', amount: 30000, balance: 44000, party: '誦丞爸爸', note: 'NT$ 50,000' },
+    { type: '收入', date: '2025/1/14', item: '捐贈', amount: 40000, balance: 84000, party: '行雲媽媽(旅宿)', note: 'NT$ 90,000' },
+    { type: '收入', date: '2025/1/14', item: '捐贈', amount: 60000, balance: 144000, party: '行雲家人(材料)', note: 'NT$ 150,000' },
+    { type: '收入', date: '2025/1/14', item: '捐贈', amount: 50000, balance: 194000, party: '行雲家人(材料)', note: 'NT$ 200,000' },
+    { type: '支出', date: '2025/1/15', item: '住宿訂金', amount: -10000, balance: 184000, party: '成財老師', note: 'NT$ 200,000' },
+    { type: '收入', date: '2025/1/16', item: '捐贈', amount: 10000, balance: 194000, party: '李校長(車資)', note: 'NT$ 210,000' },
+    { type: '收入', date: '2025/1/16', item: '捐贈', amount: 10000, balance: 204000, party: '李校長', note: 'NT$ 220,000' },
+    { type: '支出', date: '2025/1/21', item: '陽明交大集訓計程車費', amount: -615, balance: 203385, party: '尚未結帳', note: '王潔宇410+205' },
+    { type: '支出', date: '2025/1/22', item: '住宿費尾款', amount: -36800, balance: 166585, party: '成財老師結帳', note: 'NT$ 220,000' },
+    { type: '支出', date: '2025/1/22', item: '陽明交大集訓車票', amount: -18482, balance: 148103, party: '原佑老師代墊', note: '已收款' },
+    { type: '收入', date: '2025/2/13', item: '捐贈', amount: 2000, balance: 150103, party: '陳軒語、王韻棠', note: '無指定' },
+    { type: '支出', date: '2025/2/13', item: '碳纖維材料', amount: -1260, balance: 148843, party: '大鼻子玻纖材料行', note: '先墊，原佑蝦皮' },
+    { type: '支出', date: '2025/2/23', item: '降落傘綁繩', amount: -90, balance: 148753, party: '', note: '已付' },
+    { type: '支出', date: '2025/2/25', item: '鉗子', amount: -249, balance: 148504, party: '', note: '已付' },
+    { type: '支出', date: '2025/2/25', item: 'PLA線材20卷', amount: -7980, balance: 140524, party: '原佑代墊', note: '已收款' },
+    { type: '支出', date: '2025/3/6', item: '雞眼釘', amount: -208, balance: 140316, party: '', note: '已付' },
+    { type: '支出', date: '2025/3/6', item: '傘布（退款）', amount: 960, balance: 139356, party: '', note: '已退款' },
+    { type: '支出', date: '2025/3/6', item: '降落傘繩', amount: -1005, balance: 138351, party: '', note: '已付' },
+    { type: '支出', date: '2025/3/11', item: '紙管 (100cm×4)', amount: -1270, balance: 137081, party: '原佑蝦皮', note: '先墊' },
+    { type: '支出', date: '2025/3/19', item: '真空幫浦+冷媒管', amount: -2199, balance: 134882, party: '原佑蝦皮', note: '先墊' },
+    { type: '支出', date: '2025/3/19', item: '三通控制閥等', amount: -540, balance: 134342, party: '原佑蝦皮', note: '先墊' },
+    { type: '支出', date: '2025/3/19', item: 'RTM 真空耗材等', amount: -670, balance: 133672, party: '原佑蝦皮', note: '先墊' },
+    { type: '支出', date: '2025/3/20', item: '碳纖維與耗材（第一批）', amount: -8800, balance: 124872, party: '原佑蝦皮', note: '已付' },
+    { type: '支出', date: '2025/3/25', item: 'DC-DC 9A 300W', amount: -200, balance: 124672, party: '成財蝦皮', note: '已付' },
+    { type: '收入', date: '2025/3/27', item: '捐贈（報名費）', amount: 6000, balance: 130672, party: '教務處', note: '已核銷、入賬' },
+    { type: '支出', date: '2025/3/28', item: '樹莓派', amount: -4203, balance: 126469, party: '成財蝦皮', note: '已付' },
+    { type: '支出', date: '2025/3/28', item: 'BME280 感測模組', amount: -420, balance: 126049, party: '成財蝦皮', note: '已付' },
+    { type: '支出', date: '2025/3/28', item: 'LoRa 模組', amount: -255, balance: 125794, party: '成財蝦皮', note: '已付' },
+    { type: '支出', date: '2025/3/28', item: '洞洞板', amount: -228, balance: 125566, party: '成財蝦皮', note: '已付' },
+    { type: '支出', date: '2025/4/10', item: '紙管 (100cm×8)', amount: -2540, balance: 123026, party: '原佑蝦皮', note: '先墊' },
+    { type: '支出', date: '2025/4/16', item: '碳纖維耗材（二批）', amount: -6100, balance: 116926, party: '原佑蝦皮', note: '先墊' },
+    { type: '支出', date: '2025/4/20', item: '降落傘(淘寶)', amount: -4547, balance: 112379, party: '', note: '集運/手續費/關稅另列' },
+    { type: '支出', date: '2025/4/20', item: '降落傘信用卡手續費', amount: -68, balance: 112311, party: '', note: '' },
+    { type: '支出', date: '2025/4/20', item: '降落傘集運費', amount: -135, balance: 112176, party: '', note: '' },
+    { type: '支出', date: '2025/4/29', item: '降落傘關稅', amount: -128, balance: 112048, party: '', note: '' },
+    { type: '支出', date: '2025/4/29', item: '碳纖維布 3K', amount: -4600, balance: 107448, party: '原佑蝦皮', note: '先墊' },
+    { type: '支出', date: '2025/5/5', item: 'CM5 IO Board 擴展板', amount: -1213, balance: 106235, party: '成財蝦皮', note: '已付' },
+    { type: '支出', date: '2025/5/5', item: 'GY-91 感測模組', amount: -486, balance: 105749, party: '成財蝦皮', note: '已付' },
+    { type: '支出', date: '2025/5/5', item: 'SX1278 LoRa 模組', amount: -645, balance: 105104, party: '成財蝦皮', note: '已付' },
+    { type: '支出', date: '2025/5/9', item: '碳纖維耗材（三批）', amount: -14700, balance: 90404, party: '原佑蝦皮', note: '先墊' },
+    { type: '支出', date: '2025/5/16', item: '美工刀片', amount: -132, balance: 90272, party: '誦丞', note: '已核銷' },
+    { type: '支出', date: '2025/5/17', item: '亮彩輕便雨衣', amount: -232, balance: 90040, party: '韻棠', note: '已核銷' },
+    { type: '支出', date: '2025/5/21', item: 'CM5 鋁合金散熱片', amount: -423, balance: 89617, party: '成財蝦皮', note: '已付' },
+    { type: '支出', date: '2025/5/21', item: 'Camera Module 3 (2組)', amount: -2855, balance: 86762, party: '成財蝦皮', note: '已付' },
+    { type: '支出', date: '2025/5/21', item: '工業縫紉機刀', amount: -113, balance: 86649, party: '成財蝦皮', note: '已付' },
+    { type: '支出', date: '2025/5/22', item: '手套/雨衣/切割器', amount: -555, balance: 86094, party: '韻棠', note: '已核銷' },
+    { type: '支出', date: '2025/5/22', item: '火箭滑軌螺帽', amount: -1358, balance: 84736, party: '原佑蝦皮', note: '先墊' },
+    { type: '支出', date: '2025/5/23', item: '運動風衣', amount: -2226, balance: 82510, party: '韻棠', note: '已核銷' },
+    { type: '支出', date: '2025/5/23', item: '碳纖維布 12K', amount: -5050, balance: 77460, party: '原佑蝦皮', note: '先墊' },
+    { type: '支出', date: '2025/5/27', item: '120W 行動電源', amount: -438, balance: 77022, party: '成財蝦皮', note: '已付' },
+    { type: '支出', date: '2025/5/28', item: '隊服訂金', amount: -5000, balance: 72022, party: '伍角衣版', note: '已付' },
+    { type: '支出', date: '2025/5/28', item: '火車票 (12人)', amount: -14832, balance: 57190, party: '成財', note: '支給政宏15000取票' },
+    { type: '支出', date: '2025/5/31', item: 'Kingston NV3 SSD', amount: -1284, balance: 55906, party: '成財蝦皮', note: '已付' },
+    { type: '支出', date: '2025/5/31', item: '攝影模組連接線', amount: -456, balance: 55450, party: '成財蝦皮', note: '已付' },
+    { type: '支出', date: '2025/6/2', item: 'Anker 165W 行動電源', amount: -2445, balance: 53005, party: '成財蝦皮', note: '已付' },
+    { type: '支出', date: '2025/6/5', item: '隊服 20 件', amount: -3800, balance: 49205, party: '伍角衣版', note: '已付' },
+    { type: '收入', date: '2025/6/10', item: '捐贈', amount: 10000, balance: 59205, party: '李校長', note: '現金已入帳' },
+    { type: '支出', date: '2025/6/12', item: '3M 噴膠', amount: -526, balance: 58679, party: '原佑蝦皮', note: '先墊' },
+    { type: '收入', date: '2025/6/13', item: '捐贈', amount: 20000, balance: 78679, party: '倪益民老師', note: '已入帳' },
+    { type: '支出', date: '2025/6/13', item: '住宿費訂金', amount: -10000, balance: 68679, party: '成財', note: '已付' },
+    { type: '支出', date: '2025/6/14', item: '發泡劑', amount: -649, balance: 68030, party: '原佑蝦皮', note: '先墊' },
+    { type: '支出', date: '2025/6/14', item: '高速剛洗刀', amount: -440, balance: 67590, party: '原佑蝦皮', note: '' },
+    { type: '支出', date: '2025/7/7', item: '4040 鋁擠架', amount: -3530, balance: 64060, party: '原佑蝦皮', note: '' },
+    { type: '支出', date: '2025/7/7', item: '不銹鋼引擎還訂製', amount: -3028, balance: 61032, party: '原佑蝦皮', note: '' },
+    { type: '支出', date: '2025/7/10', item: '紙管 100cm (2根)', amount: -710, balance: 60322, party: '原佑蝦皮', note: '' },
+    { type: '支出', date: '2025/7/22', item: '火車票', amount: -10740, balance: 49582, party: '成財', note: '已付' },
+    { type: '支出', date: '2025/7/22', item: '八木天線', amount: -2290, balance: 47292, party: '建興師', note: '已付' },
+    { type: '支出', date: '2025/7/22', item: 'LoRa', amount: -620, balance: 46672, party: '建興師', note: '已付' },
+    { type: '支出', date: '2025/7/22', item: 'GY-91 九軸', amount: -412, balance: 46260, party: '建興師', note: '已付' },
+    { type: '支出', date: '2025/7/22', item: 'SMA 2.4G 天線', amount: -248, balance: 46012, party: '建興師', note: '已付' },
+    { type: '支出', date: '2025/7/22', item: 'GY-NEO-6M GPS', amount: -205, balance: 45807, party: '建興師', note: '已付' },
+    { type: '支出', date: '2025/7/22', item: 'GY-NEO-6MV2 GPS', amount: -300, balance: 45507, party: '建興師', note: '已付' },
+    { type: '支出', date: '2025/7/22', item: 'SMA 公轉母', amount: -263, balance: 45244, party: '建興師', note: '已付' },
+    { type: '支出', date: '2025/7/22', item: 'CM5 擴充模組', amount: -920, balance: 44324, party: '建興師', note: '已付' },
+    { type: '支出', date: '2025/7/22', item: '壓克力盒', amount: -870, balance: 43454, party: '建興師', note: '已付' },
+    { type: '支出', date: '2025/7/22', item: '火箭身貼紙', amount: -836, balance: 42618, party: '家祥(韻棠)', note: '已付' },
+    { type: '支出', date: '2025/7/22', item: '綠茶 x3', amount: -69, balance: 42549, party: '翊丞', note: '已付' },
+    { type: '支出', date: '2025/7/23', item: '強力瞬間膠', amount: -281, balance: 42268, party: '翊丞', note: '已付' },
+    { type: '支出', date: '2025/7/24', item: '墾丁快線去程 (8人)', amount: -952, balance: 41316, party: '阿肥', note: '未付' },
+    { type: '支出', date: '2025/7/25', item: '晚餐便當', amount: -1260, balance: 40056, party: '成財', note: '已付' },
+    { type: '支出', date: '2025/7/26', item: '袖套、噴漆', amount: -1137, balance: 38919, party: '翊丞', note: '已付' },
+    { type: '支出', date: '2025/7/26', item: '晚餐 PIZZA', amount: -2290, balance: 36629, party: '政宏', note: '已付' },
+    { type: '支出', date: '2025/7/27', item: '住宿費尾款', amount: -66900, balance: -30271, party: '成財', note: '已付' },
+    { type: '支出', date: '2025/7/27', item: '晚餐便當', amount: -1170, balance: -31441, party: '政宏', note: '已付' },
+    { type: '支出', date: '2025/7/31', item: '其他', amount: -836, balance: -32277, party: '韻棠', note: '已付' },
+    { type: '收入', date: '', item: '降落傘傘布退費', amount: 960, balance: -31317, party: '', note: '退款入帳' },
+    { type: '收入', date: '', item: '決賽補助', amount: 20000, balance: -11317, party: '主辦單位', note: '尚未入帳' },
+    { type: '支出', date: '', item: '墾丁快線回程', amount: 0, balance: -11317, party: '', note: '' },
+    { type: '收入', date: '2025/8/11', item: '捐贈', amount: 10000, balance: -1317, party: '恩慈家長', note: '已入帳' }
   ];
 
   return (
@@ -61,15 +160,15 @@ const BudgetVisualization = () => {
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
           <div className="bg-white rounded-xl shadow-lg p-6 border-l-4 border-green-500">
             <h3 className="text-lg font-semibold text-gray-700 mb-2">總募款金額</h3>
-            <p className="text-3xl font-bold text-green-600">NT$ 269,000</p>
+            <p className="text-3xl font-bold text-green-600">NT$ 279,000</p>
           </div>
           <div className="bg-white rounded-xl shadow-lg p-6 border-l-4 border-red-500">
             <h3 className="text-lg font-semibold text-gray-700 mb-2">總支出金額</h3>
             <p className="text-3xl font-bold text-red-600">NT$ 270,317</p>
           </div>
-          <div className="bg-white rounded-xl shadow-lg p-6 border-l-4 border-orange-500">
+          <div className="bg-white rounded-xl shadow-lg p-6 border-l-4 border-green-500">
             <h3 className="text-lg font-semibold text-gray-700 mb-2">目前餘額</h3>
-            <p className="text-3xl font-bold text-orange-600">-NT$ 1,317</p>
+            <p className="text-3xl font-bold text-green-600">NT$ 10,683</p>
           </div>
         </div>
 
@@ -107,7 +206,7 @@ const BudgetVisualization = () => {
                   <PieChart>
                     <Pie
                       data={[
-                        { name: '募款收入', value: 269000, color: '#10B981' },
+                        { name: '募款收入', value: 279000, color: '#10B981' },
                         { name: '實際支出', value: 270317, color: '#EF4444' }
                       ]}
                       cx="50%"
@@ -120,7 +219,7 @@ const BudgetVisualization = () => {
 }
                     >
                       {[
-                        { name: '募款收入', value: 269000, color: '#10B981' },
+                        { name: '募款收入', value: 279000, color: '#10B981' },
                         { name: '實際支出', value: 270317, color: '#EF4444' }
                       ].map((entry, index) => (
                         <Cell key={`cell-${index}`} fill={entry.color} />
@@ -133,10 +232,10 @@ const BudgetVisualization = () => {
               <div className="mt-6 text-center">
                 <p className="text-lg text-gray-700">
                   <span className="font-semibold">資金使用率：</span>
-                  <span className="text-red-600 font-bold">100.5%</span>
+                  <span className="text-green-600 font-bold">98.2%</span>
                 </p>
                 <p className="text-sm text-gray-600 mt-2">
-                  團隊非常謹慎使用每一分經費，目前略有超支 NT$1,317，將由團隊自行補足
+                  已收到恩慈家長捐贈 NT$10,000，更新後目前結餘 NT$10,683。感謝所有捐款人的支持！
                 </p>
               </div>
             </div>
@@ -256,6 +355,52 @@ const BudgetVisualization = () => {
                   <Line type="monotone" dataKey="累計餘額" stroke="#3B82F6" strokeWidth={3} />
                 </LineChart>
               </ResponsiveContainer>
+
+              {/* 交易明細切換按鈕 */}
+              <div className="mt-4 flex justify-end">
+                <button
+                  onClick={() => setShowLedger(v => !v)}
+                  className="px-4 py-2 bg-blue-500 text-white rounded-lg shadow-md"
+                >
+                  {showLedger ? '隱藏帳目明細' : '顯示帳目明細'}
+                </button>
+              </div>
+              
+              {/* 逐筆帳目表格 */}
+              {showLedger && (
+                <div className="mt-6 overflow-x-auto">
+                  <table className="w-full bg-white rounded-lg shadow-md">
+                    <thead>
+                      <tr className="text-left">
+                        <th className="p-2 border-b">日期</th>
+                        <th className="p-2 border-b">類別</th>
+                        <th className="p-2 border-b">項目 / 說明</th>
+                        <th className="p-2 border-b text-right">金額 (NT$)</th>
+                        <th className="p-2 border-b text-right">帳戶餘額</th>
+                        <th className="p-2 border-b">備註</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {transactions.map((t, idx) => (
+                        <tr key={idx} className="odd:bg-gray-50">
+                          <td className="p-2 align-top">{t.date}</td>
+                          <td className="p-2 align-top">{t.type}</td>
+                          <td className="p-2 align-top">
+                            <div className="font-medium">{t.item}</div>
+                            <div className="text-sm text-gray-500">{t.party || ''}</div>
+                          </td>
+                          <td className={`p-2 text-right align-top ${t.amount < 0 ? 'text-red-600' : 'text-green-600'}`}>
+                            {t.amount < 0 ? '-' : ''}NT${Math.abs(t.amount).toLocaleString()}
+                          </td>
+                          <td className="p-2 text-right align-top">NT${(t.balance ?? '').toLocaleString()}</td>
+                          <td className="p-2 align-top text-sm text-gray-600">{t.note}</td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
+              )}
+
               <div className="mt-6 grid grid-cols-1 md:grid-cols-3 gap-4">
                 <div className="text-center p-4 bg-green-50 rounded-lg">
                   <p className="text-sm text-gray-600">募款高峰期</p>
