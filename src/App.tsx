@@ -115,6 +115,17 @@ const BudgetVisualization = () => {
     { name: '目前餘額', value: currentBalance, color: currentBalance >= 0 ? '#10B981' : '#F59E0B' }
   ];
 
+  // 主要支出分類（提供給「支出明細」圓餅圖與清單）
+  const expenseCategories = [
+    { name: '住宿費用', value: 113700, percentage: 42.1, color: '#3B82F6' },
+    { name: '材料費用', value: 58247, percentage: 21.5, color: '#10B981' },
+    { name: '交通費用', value: 45524, percentage: 16.8, color: '#F59E0B' },
+    { name: '電子設備', value: 17861, percentage: 6.6, color: '#8B5CF6' },
+    { name: '隊服製作', value: 8800, percentage: 3.3, color: '#EF4444' },
+    { name: '報名費用', value: 6000, percentage: 2.2, color: '#06B6D4' },
+    { name: '其他雜費', value: 20185, percentage: 7.5, color: '#6B7280' }
+  ];
+
   // 收入來源
   const incomeData = [
     { name: '行雲家人捐贈', value: 150000, percentage: 55.8, color: '#10B981' },
