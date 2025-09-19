@@ -220,63 +220,52 @@ const BudgetVisualization = () => {
           
           {/* 收支概況 */}
           {activeTab === 'overview' && (
-            <div>
-              <h2 className="text-2xl font-bold text-gray-800 mb-6 text-center">收支概況</h2>
-              <div className="flex justify-center">
-                <ResponsiveContainer width="100%" height={400}>
-                  <PieChart>
--                    <Pie
--                      data={overviewPieData}
-+                    <Pie
-+                      data={overviewPieDataNoBalance}
-                       cx="50%"
-                       cy="50%"
-                       outerRadius={120}
-                       fill="#8884d8"
-                       dataKey="value"
-                       // 顯示 label：payload 使用 any 並以安全存取 raw
--                      label={({ payload }: any) => {
--                        const raw = (payload?.raw ?? 0) as number;
--                        const sign = raw < 0 ? '-' : '';
--                        return `${payload?.name ?? 'N/A'}: ${sign}NT$${Math.abs(raw).toLocaleString()}`;
--                      }}
-+                      label={({ payload }: any) => {
-+                        const raw = (payload?.raw ?? 0) as number;
-+                        const sign = raw < 0 ? '-' : '';
-+                        return `${payload?.name ?? 'N/A'}: ${sign}NT$${Math.abs(raw).toLocaleString()}`;
-+                      }}
-                     >
--                      {overviewPieData.map((entry, index) => (
--                        <Cell key={`cell-${index}`} fill={entry.color} />
--                      ))}
-+                      {overviewPieDataNoBalance.map((entry, index) => (
-+                        <Cell key={`cell-${index}`} fill={entry.color} />
-+                      ))}
-                    </Pie>
-                    <Tooltip
-                      // tooltip callback 參數標註為 any，並以安全存取 payload.raw
-                      formatter={(value: any, name: any, props: any) => {
-                        const raw = props?.payload?.raw;
-                        if (typeof raw === 'number') {
-                          return `${raw < 0 ? '-NT$ ' : 'NT$ '}${Math.abs(raw).toLocaleString()}`;
-                        }
-                        return `NT$ ${Number(value).toLocaleString()}`;
-                      }}
-                    />
-                    <Legend />
-                  </PieChart>
-                </ResponsiveContainer>
-              </div>
-              <div className="mt-6 text-center">
-                <p className="text-lg text-gray-700">
-                  <span className="font-semibold">資金使用率：</span>
-                  <span className={`${usageRate >= 100 ? 'text-red-600' : 'text-green-600'} font-bold`}>{usageRate.toFixed(1)}%</span>
-                </p>
-                <p className="text-sm text-gray-600 mt-2">
-                  目前結餘 {formatCurrency(currentBalance)}。感謝所有捐款人的支持！
-                </p>
-              </div>
-            </div>
+<div>
+  <h2 className="text-2xl font-bold text-gray-800 mb-6 text-center">收支概況</h2>
+  { /* 收支概況的 PieChart (修正，移除遺留的 '-' '+' 符號) */ }
+  <div className="flex justify-center">
+    <ResponsiveContainer width="100%" height={400}>
+      <PieChart>
+        <Pie
+          data={overviewPieDataNoBalance}
+          cx="50%"
+          cy="50%"
+          outerRadius={120}
+          fill="#8884d8"
+          dataKey="value"
+          label={({ payload }: any) => {
+            const raw = (payload?.raw ?? 0) as number;
+            const sign = raw < 0 ? '-' : '';
+            return `${payload?.name ?? 'N/A'}: ${sign}NT$${Math.abs(raw).toLocaleString()}`;
+          }}
+        >
+          {overviewPieDataNoBalance.map((entry, index) => (
+            <Cell key={`cell-${index}`} fill={entry.color} />
+          ))}
+        </Pie>
+        <Tooltip
+          formatter={(value: any, name: any, props: any) => {
+            const raw = props?.payload?.raw;
+            if (typeof raw === 'number') {
+              return `${raw < 0 ? '-NT$ ' : 'NT$ '}${Math.abs(raw).toLocaleString()}`;
+            }
+            return `NT$ ${Number(value).toLocaleString()}`;
+          }}
+        />
+        <Legend />
+      </PieChart>
+    </ResponsiveContainer>
+  </div>
+  <div className="mt-6 text-center">
+    <p className="text-lg text-gray-700">
+      <span className="font-semibold">資金使用率：</span>
+      <span className={`${usageRate >= 100 ? 'text-red-600' : 'text-green-600'} font-bold`}>{usageRate.toFixed(1)}%</span>
+    </p>
+    <p className="text-sm text-gray-600 mt-2">
+      目前結餘 {formatCurrency(currentBalance)}。感謝所有捐款人的支持！
+    </p>
+  </div>
+</div>
           )}
 
           {/* 支出明細 */}
